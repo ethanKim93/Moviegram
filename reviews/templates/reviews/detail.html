@@ -198,12 +198,14 @@
           </div>
          {% else %}
           <div class="profileview1-user-img">
+           <a href="{% url 'accounts:profile' username=user.username %}">
             <img src="{% static 'file/defaultprofile.png' %}" class="profileview1-user-img-img" alt="Avatar" >
+            </a>
           </div>   
          {% endif %}
 
          <div style="align-items: center; justify-content: center;" >
-            <h4>{{review.user}}</h4>
+             <a href="{% url 'accounts:profile' username=user.username %}"><h4 style=" font-weight: bolder; color:white; text-decoration: none;">{{review.user}}</h4></a> 
             <p>{{review.movie.title}} 후기</p>
          </div>
        

@@ -37,3 +37,4 @@ sqlparse==0.4.1
 traitlets==5.1.0
 urllib3==1.26.7
 wcwidth==0.2.5
+django-social-share==2.2.1
