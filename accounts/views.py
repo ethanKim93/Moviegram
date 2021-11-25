@@ -15,13 +15,14 @@ from django.contrib.auth import update_session_auth_hash
 from django.contrib import messages
 from reviews.views import movie_save
 from django.core.paginator import Paginator
-from decouple import config
 
 import datetime
 import random
 import requests
 from .models import User
 from .sendemail import sendemail
+from decouple import config
+
 TMDB_API = config('TMDB_API')
 KAKAO_API = config('KAKAO_API')
 # Create your views here.
@@ -181,7 +182,6 @@ def recommendation(request, username):
             'movies':year_list[random_key],
             'month':nowMonth
             }
-        print(random_recommend)
         context = {
             'best_movie_list':best_movie_list,
             'recomendation_followers': recomendation_followers,

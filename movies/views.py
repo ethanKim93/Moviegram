@@ -11,7 +11,10 @@ from reviews.models import Review
 import requests
 from reviews.views import movie_save
 from accounts.sendemail import sendemail
+from decouple import config
 
+TMDB_API = config('TMDB_API')
+KAKAO_API = config('KAKAO_API')
 
 # Create your views here.
 IMAGE_LINK = 'https://image.tmdb.org/t/p/w500/'
@@ -105,7 +108,6 @@ def likes(request, pk):
 def movie_reviews(request,pk):
     movie = get_object_or_404(Movie, pk=pk)
     reviews = Review.objects.filter(movie=movie.pk)
-    print(reviews)
     context = {
         'movie':movie,
         'reviews': reviews,
