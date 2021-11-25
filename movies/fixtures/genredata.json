@@ -1,0 +1,157 @@
+
+[
+  {
+    "model": "movies.Genre",
+    "pk": 1,
+    "fields": {
+	    "genre_name" : "Action",
+		  "genre_id" : 28
+    }
+  },
+	{
+    "model": "movies.Genre",
+    "pk": 2,
+    "fields": {
+	    "genre_name" : "Adventure",
+		  "genre_id" : 12
+    }
+  },
+	{
+    "model": "movies.Genre",
+    "pk": 3,
+    "fields": {
+	    "genre_name" : "Animation",
+		  "genre_id" : 16
+    }
+  },
+	{
+    "model": "movies.Genre",
+    "pk": 4,
+    "fields": {
+	    "genre_name" : "Comedy",
+		  "genre_id" : 35
+    }
+  },
+	{
+    "model": "movies.Genre",
+    "pk": 5,
+    "fields": {
+	    "genre_name" : "Crime",
+		  "genre_id" : 80
+    }
+  },
+	{
+    "model": "movies.Genre",
+    "pk": 6,
+    "fields": {
+	    "genre_name" : "Documentary",
+		  "genre_id" : 99
+    }
+  },
+	{
+    "model": "movies.Genre",
+    "pk": 7,
+    "fields": {
+	    "genre_name" : "Drama",
+		  "genre_id" : 18
+    }
+  },
+	{
+    "model": "movies.Genre",
+    "pk": 8,
+    "fields": {
+	    "genre_name" : "Family",
+		  "genre_id" : 10751
+    }
+  },
+	{
+    "model": "movies.Genre",
+    "pk": 9,
+    "fields": {
+	    "genre_name" : "Fantasy",
+		  "genre_id" : 14
+    }
+  },
+	{
+    "model": "movies.Genre",
+    "pk": 10,
+    "fields": {
+	    "genre_name" : "History",
+		  "genre_id" : 36
+    }
+  },
+	{
+    "model": "movies.Genre",
+    "pk": 11,
+    "fields": {
+	    "genre_name" : "Horror",
+		  "genre_id" : 27
+    }
+  },
+	{
+    "model": "movies.Genre",
+    "pk": 12,
+    "fields": {
+	    "genre_name" : "Music",
+		  "genre_id" : 10402
+    }
+  },
+  {
+    "model": "movies.Genre",
+    "pk": 13,
+    "fields": {
+	    "genre_name" : "Mystery",
+		  "genre_id" : 9648
+    }
+  },
+    {
+    "model": "movies.Genre",
+    "pk": 14,
+    "fields": {
+	    "genre_name" : "Romance",
+		  "genre_id" : 10749
+    }
+  },
+    {
+    "model": "movies.Genre",
+    "pk": 15,
+    "fields": {
+	    "genre_name" : "Science Fiction",
+		  "genre_id" : 878
+    }
+  },
+    {
+    "model": "movies.Genre",
+    "pk": 16,
+    "fields": {
+	    "genre_name" : "TV Movie",
+		  "genre_id" : 10770
+    }
+  },
+    {
+    "model": "movies.Genre",
+    "pk": 17,
+    "fields": {
+	    "genre_name" : "Thriller",
+		  "genre_id" : 53
+    }
+  },
+    {
+    "model": "movies.Genre",
+    "pk": 18,
+    "fields": {
+	    "genre_name" : "War",
+		  "genre_id" : 10752
+    }
+  },
+    {
+    "model": "movies.Genre",
+    "pk": 19,
+    "fields": {
+	    "genre_name" : "Western",
+		  "genre_id" : 37
+    }
+  }
+  
+  
+]
