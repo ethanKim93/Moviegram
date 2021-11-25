@@ -145,7 +145,11 @@ def update(request, pk):
         return redirect('reviews:index')
     context = {
         'review': review,
+        'movie' :review.movie,
+        'movie_pk' : review.movie.pk,
         'form': form,
+        'KAKAO_API':KAKAO_API
+
     }
     return render(request, 'reviews/update.html', context)
 

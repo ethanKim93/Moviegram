@@ -22,7 +22,7 @@
             <select class="form-select form-select-lg mb-3" aria-label="multiple select example" name='following_id'>
               <option selected>함께 영화본 사람을 선택해주세요</option>
                 {% for following in user.followings.all  %}
-                    <option value="{{following.pk}}">{{following.pk}}{{following.nickname}}</option>
+                    <option value="{{following.pk}}">{{following.nickname}}</option>
                 {% endfor %}
             </select>
 
