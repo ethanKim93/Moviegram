@@ -51,7 +51,7 @@ def detail(request, pk):
     else:
         movie_rank = 0
     similar_movie_list = []
-    similar_url = f'https://api.themoviedb.org/3/movie/{movie.tmdb_id}/similar?api_key=d3d4bb5575878ac8ad588931b4541bc3&language=ko-KR&page=1'
+    similar_url = f'https://api.themoviedb.org/3/movie/{movie.tmdb_id}/similar?api_key={TMDB_API}&language=ko-KR&page=1'
     response = requests.get(similar_url)
     similar_movies = response.json()['results']
     for similar_movie in similar_movies[:10]:
@@ -64,7 +64,7 @@ def detail(request, pk):
             finally:
                 continue
         similar_movie_id = similar_movie['id']
-        detail_url = f'https://api.themoviedb.org/3/movie/{similar_movie_id}?api_key=d3d4bb5575878ac8ad588931b4541bc3&language=ko-KR'
+        detail_url = f'https://api.themoviedb.org/3/movie/{similar_movie_id}?api_key={TMDB_API}&language=ko-KR'
         response = requests.get(detail_url)
         s_movie = response.json()
         s_movie_pk = movie_save(s_movie)

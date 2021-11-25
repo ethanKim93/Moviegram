@@ -10,15 +10,17 @@ from accounts.sendemail import sendemail
 from django.utils.text import slugify
 import requests
 from django.db.models import Q
-API_KEY = 'api_key=d3d4bb5575878ac8ad588931b4541bc3'
+from decouple import config
 
+TMDB_API = config('TMDB_API')
+KAKAO_API = config('KAKAO_API')
 # Create your views here.
 def search(request):
     results = ''
     if request.user.is_authenticated:
         if request.method == 'POST':
             keyword= request.POST['keyword']
-            search_url = f'https://api.themoviedb.org/3/search/movie?api_key=d3d4bb5575878ac8ad588931b4541bc3&language=ko-KR&query={keyword}&page=1&include_adult=false'
+            search_url = f'https://api.themoviedb.org/3/search/movie?api_key={TMDB_API}&language=ko-KR&query={keyword}&page=1&include_adult=false'
             response = requests.get(search_url)
             data = response.json()
             try:
@@ -67,7 +69,7 @@ def create(request):
                 return redirect('reviews:detail',review.pk)
         else:
             movie_id = request.GET['movie_id']
-            detail_url = f'https://api.themoviedb.org/3/movie/{movie_id}?api_key=d3d4bb5575878ac8ad588931b4541bc3&language=ko-KR'
+            detail_url = f'https://api.themoviedb.org/3/movie/{movie_id}?api_key={TMDB_API}&language=ko-KR'
             response = requests.get(detail_url)
             movie = response.json()
             movie_pk = movie_save(movie)
@@ -75,7 +77,9 @@ def create(request):
         context = {
             'form': form,
             'movie' :movie,
-            'movie_pk' : movie_pk
+            'movie_pk' : movie_pk,
+            'KAKAO_API':KAKAO_API
+
         }
         return render(request, 'reviews/create.html', context)
     else:
@@ -91,8 +95,8 @@ def movie_save(movie):
         for genre in movie['genres']:
                 select_genre = Genre.objects.filter(genre_id=genre['id'])
                 movie_save.genre.add(select_genre[0].pk)
-        movie_video_url = f'https://api.themoviedb.org/3/movie/{movie_id}/videos?api_key=d3d4bb5575878ac8ad588931b4541bc3&language=ko-KR'
-        img_video_url = f'https://api.themoviedb.org/3/movie/{movie_id}/images?api_key=d3d4bb5575878ac8ad588931b4541bc3&language=ko'
+        movie_video_url = f'https://api.themoviedb.org/3/movie/{movie_id}/videos?api_key={TMDB_API}&language=ko-KR'
+        img_video_url = f'https://api.themoviedb.org/3/movie/{movie_id}/images?api_key={TMDB_API}&language=ko'
         response_viedeo = requests.get(movie_video_url)
         response_img = requests.get(img_video_url)
         video_data = response_viedeo.json()

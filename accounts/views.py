@@ -15,12 +15,15 @@ from django.contrib.auth import update_session_auth_hash
 from django.contrib import messages
 from reviews.views import movie_save
 from django.core.paginator import Paginator
+from decouple import config
 
 import datetime
 import random
 import requests
 from .models import User
 from .sendemail import sendemail
+TMDB_API = config('TMDB_API')
+KAKAO_API = config('KAKAO_API')
 # Create your views here.
 @require_http_methods(["GET","POST"])
 def signup(request):
@@ -146,7 +149,7 @@ def recommendation(request, username):
         followList =person.followings.all()
         recomendation_followers=Review.objects.filter(rank__gte=8, user__in=followList).prefetch_related('user')
         best_movie_list = []
-        search_url = f'https://api.themoviedb.org/3/movie/popular?api_key=d3d4bb5575878ac8ad588931b4541bc3&language=ko-KR'
+        search_url = f'https://api.themoviedb.org/3/movie/popular?api_key={TMDB_API}&language=ko-KR'
         response = requests.get(search_url)
         data = response.json()
         results = data['results']
@@ -156,7 +159,7 @@ def recommendation(request, username):
                 best_movie_list.append(get_object_or_404(Movie, tmdb_id=best_movie[0].tmdb_id))
                 continue
             movie_id = result['id']
-            detail_url = f'https://api.themoviedb.org/3/movie/{movie_id}?api_key=d3d4bb5575878ac8ad588931b4541bc3&language=ko-KR'
+            detail_url = f'https://api.themoviedb.org/3/movie/{movie_id}?api_key={TMDB_API}&language=ko-KR'
             response = requests.get(detail_url)
             best_movie = response.json()
             best_movie_pk = movie_save(best_movie)
