@@ -1,0 +1,48 @@
+{% load static %}
+
+<style>
+    .container {
+        padding: 0;
+        margin: 0, auto;
+    }
+    .container a {
+      width: 45%;
+      max-width: 1200px;
+    }
+
+    .container div {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      
+      border-radius: 1rem;
+    }
+
+    .container img {
+      width: 100%;
+      border-radius: 1rem;
+    }
+
+</style>
+    {% if movie_list %}
+    <div class="container">
+        {% for movie in movie_list %}
+        <a href="{% url 'movieapp:detail' pk=movie.pk %}">
+            {% include 'snippets/card.html' with movie=movie %}
+        </a>
+        {% endfor %}
+    </div>
+    <script src="{% static 'js/magicgrid.js' %}"></script>
+    {% else %}
+    <div class="text-center">
+        <h1>No Movies YET!</h1>
+    </div>
+    {% endif %}
+
+    {% include 'snippets/pagination.html' with page_obj=page_obj %}
+
+    <div style="text-align: center">
+        <a href="{% url 'movieapp:create' %}" class="btn btn-dark rounded-pill mt-3 mb-3 px-3">
+            Create Movie
+        </a>
+    </div>

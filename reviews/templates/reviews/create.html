@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load bootstrap5 %}
+{% block content %}
+
+<script src="//cdn.jsdelivr.net/npm/medium-editor@5.23.2/dist/js/medium-editor.min.js"></script>
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/medium-editor@5.23.2/dist/css/medium-editor.min.css" type="text/css" media="screen" charset="utf-8">
+<div class="container text-dark">
+    <div class='row mt-3' style="border-radius: 1rem; justify-content: center; align-items: center;">
+        <div class="col-6" style="background:#40434f; padding:30px; border-radius: 3rem;">
+          <h3 class="text-light">{{movie.title}}</h3>
+          <form action="{% url 'reviews:create' %}" method="POST"  enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="d-flex column my-3" >
+              <div style="color:black"><span style="color:white">점수: </span>{{form.rank}}
+             <span style="color:white">장소: </span>
+              <input type="text" name="movieplace" id="movieplace" placeholder="장소를 입력해주세요">
+              </div>            
+            </div>
+            <div style="max-width:520px">
+            {{form.title}}
+            </div>
+              
+              <div class="my-3" style="max-width:520px">
+              {{form.content}}
+              </div>
+            <select class="form-select form-select-lg mb-3" aria-label="multiple select example" name='following_id' style="max-width:520px">
+              <option selected>함께 영화본 사람을 선택해주세요</option>
+                {% for following in user.followings.all  %}
+                    <option value="{{following.pk}}">{{following.nickname}}</option>
+                {% endfor %}
+            </select>
+
+            <div class="text-white d-flex" style="background:#40434f">
+            <div>
+              <p class="mx-4">후기 사진을 첨부해주세요!</p>
+              <p class="mx-4">{{form.picturepath}}</p>
+             </div>
+
+             <div style="object-position: 50%"> 
+                <th><label for="id_tags_str">Tags:</label> </th>
+                <td ><input type="text" name="tags_str" id="id_tags_str" class="text-dark"></td>
+              </div>
+            </div>
+            <input type="hidden" name='movie_id' value={{movie_pk}}>
+            <div  style="align-content:center;">
+              {% include 'reviews/kakaomap.html' %}
+            </div>
+          
+            <input type="submit" value="작성완료" class="btn btn-success my-3">
+          </form>
+           
+      </div>
+       
+        </div>
+    </div>
+</div>
+  <script>var editor = new MediumEditor('.editable');</script>
+
+{% endblock content %}
+

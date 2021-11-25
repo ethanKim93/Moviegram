@@ -1,0 +1,450 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load social_share %}
+
+{% block content %}
+
+
+<style>
+.section{
+  display: auto;
+  text-shadow:1px 1px 1px #FFF;
+}
+
+
+.profileview1 {
+  width: 100%;
+  strokeStyle :#b5b5b1;
+  lineWidth:1px;
+  background-color:#b5b5b1;
+  border-radius: 3px;
+  padding: 1px;
+  
+}
+
+.profileview1::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+.profileview1-user-img {
+  margin:10px;
+  float: left;
+  width:50px;
+  height:50px;
+  border-radius:70%;
+  overflow:hidden;
+}
+.profileview1-user-img-img {
+
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+
+
+
+@media (max-width: 500px) {
+  .profileview1 {
+      text-align: center;
+  }
+  .profileview1 img {
+      margin: auto;
+      float: none;
+      display: block;
+  }
+}
+
+
+
+
+.profileview2 {
+  width: 100%;
+
+
+  
+}
+
+.profileview2::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+.profileview2-user-img {
+  margin:10px;
+  float: left;
+  width:30px;
+  height:30px;
+  border-radius:70%;
+  overflow:hidden;
+}
+.profileview2-user-img-img {
+
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+
+
+
+@media (max-width: 500px) {
+  .profileview2 {
+      text-align: center;
+  }
+  .profileview2 img {
+      margin: auto;
+      float: none;
+      display: block;
+  }
+}
+
+
+
+
+
+
+
+
+
+  .containerflip {
+        padding: 0;
+        margin: 0, auto;
+  }
+  .containerflip a {
+      width: 100%;
+      max-width: 250px;
+  }
+  .containerflip div {
+    justify-content: center;
+    align-items: center;
+    border-radius: 3px;
+  }
+  .card {
+      position: relative;
+      transition: transform 1s;
+      transform-style: preserve-3d;
+      cursor: pointer;
+  }
+
+  .flip-box {
+    padding: auto;
+    background-color: transparent;
+    width: 120px;
+    height: 120px;
+    border: 1px solid #f1f1f1;
+    perspective: 1200px; /* Remove this if you don't want the 3D effect */
+  }
+
+  /* This container is needed to position the front and back side */
+  .flip-box-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    transition: transform 0.5s;
+    transform-style: preserve-3d;
+  }
+
+  /* Do an horizontal flip when you move the mouse over the flip box container */
+  .flip-box:hover .flip-box-inner {
+    transform: rotateY(180deg);
+   
+  }
+
+  /* Position the front and back side */
+  .flip-box-front, .flip-box-back {
+    position: absolute;
+    width: 120px; 
+    height: 120px;
+    -webkit-backface-visibility: hidden; /* Safari */
+    backface-visibility: hidden;
+    
+  }
+
+  /* Style the front side */
+  .flip-box-front {
+    background-color: #FFF;
+    color: black;
+        
+  }
+
+  /* Style the back side */
+  .flip-box-back {
+    background:black;
+    color: black;
+    transform: rotateY(180deg);
+    
+  }
+  .box{ -ms-overflow-style: none; } 
+  
+  .box::-webkit-scrollbar{ display:none; }
+
+</style>
+
+<div>
+<section>
+
+  <div class="container"style="width: 100%;">
+
+    <div class="card rounded" style= "margin-left:100px; background:black; margin-right:100px; max-width: auto; width:auto;">
+      <div class="profileview1 ">
+         {% if review.user.posterpath %}
+          <div class="profileview1-user-img" style="border-radius: 3rem; ">
+            <img src="{{review.user.posterpath.url}}" class="profileview1-user-img-img" alt="Avatar" >
+          </div>
+         {% else %}
+          <div class="profileview1-user-img">
+            <img src="{% static 'file/defaultprofile.png' %}" class="profileview1-user-img-img" alt="Avatar" >
+          </div>   
+         {% endif %}
+
+         <div style="align-items: center; justify-content: center;" >
+            <h4>{{review.user}}</h4>
+            <p>{{review.movie.title}} 후기</p>
+         </div>
+       
+                                          
+      </div>
+
+      <div class="row" style="align-items: center; margin:30px" >
+        <div class="col-6 col-md-12 col-lg-6 col-xl-6">
+          {% if review.picturepath %}
+             <img src="{{review.picturepath.url}}"  class="card-img-top"  alt="...">
+          {% else %}
+              <img src="https://image.tmdb.org/t/p/w500{{review.movie.poster_path}}" class="card-img-top" alt="..." style="border-radius: 1rem; ">
+          {% endif %}
+        </div>
+        <div class="col-6 col-md-12 col-lg-6 col-xl-6">
+          <div class="card-body align-items-center">
+              <div>
+                <div class="d-flex align-items-center justify-content-between">
+                <h1 class="card-text mb-1">{{ review.movie.title }}</h1>
+                <a href="{% url 'movies:detail' review.movie.pk %}">
+                    <button class="btn btn-light btn-outline-secondary" type="button">
+                        영화상세 
+                    </button>
+                </a>
+                </div>   
+              <div>
+                  <div class="fs-5 mb-5 d-flex">
+                     <span> 작성시간 :{{review.created_at}}</span>
+                  </div>
+              </div>   
+              <hr>
+              <div>
+                  <div class="fs-5 mb-5 d-flex">
+                                <span >TMDB 평점:{{review.movie.tmdb_rank}}</span>
+                                <span class="mx-5">MovieGram평점: {{review.rank}}</span>
+                  </div>
+              </div>
+              
+            </div>
+              
+              <hr>
+              <h1 class="card-title display-5 fw-bolder">{{ review.title }}</h1>
+              <h3 class="card-text mb-1">{{ review.content |safe }}</h3>
+              <br>
+              <div class="d-flex justify-content-between align-content-sm-center">
+                <div class="d-flex">
+                    <h4 class="card-text text-light ">{{review.user}}의 평점:   <i class="fas fa-star"></i>{{ review.rank }}</h4>
+                    {% for together in review.together.all %}
+                      <h5 class="card-text m-3"> with : {{ together.nickname }}</h5>
+                    {% endfor %}
+                </div>
+                    {% if review.place %}
+                    <h5 class="card-text m-3"> {{ review.place }}</h5>
+                    {% endif %}
+                </div>
+                  <div class="btn-group btn-outline-primary my-3" role="group" aria-label="Basic example">
+                            <button type="button" class="btn btn-light btn-outline-primary">{% post_to_facebook post.get_absolute_url "Facebook" %}</button>
+                            <button type="button" class="btn btn-light btn-outline-primary">{% post_to_twitter "Moview {{review.title}}. Review" post.get_absolute_url "Twitter" %}</button>
+                            <button type="button" class="btn btn-light btn-outline-primary">{% send_email object.title "Moview {{review.title}}. Review"  post.get_absolute_url  "email" %}</button>
+                </div>
+               <hr>
+            </div>
+            <div>
+
+            </div>
+            <div class="d-flex">
+             <hr>
+                {% if user == review.user %}
+                <div class="d-flex ">
+                  <a  href="{% url 'reviews:update' review.pk %}">
+                      <button class="btn btn-dark text-light btn-outline-secondary" type="button">
+                        리뷰수정 
+                    </button>
+                  </a>
+                  <form action="{% url 'reviews:delete' review.pk %}" method="POST">
+                    {% csrf_token %}
+                    <input type="submit" value="리뷰삭제" class="btn btn-danger btn-outline-secondary flex-shrink-0">
+                  </form>
+                </div>
+                {% endif %}
+                 <div class="mx-auto d-flex m-3 ">
+                   <a href="{% url 'reviews:likes' review.pk %}">
+                     {% if user in review.review_like.all %}
+                    <div class="d-flex mx-3">
+
+                     <span style="color:red"><i class="fas fa-heart  fa-2x"></i></span>
+                     <div class="text-white">
+                     ({{review.review_like.count}})
+                      </div>
+                    </div>
+                     {% else %}
+                   <div class="d-flex">
+                   <span  style="color:red"><i class="far fa-heart fa-2x"></i></span> 
+                   <div class="text-white">({{review.review_like.count}})</div>
+                  </div>
+                     {% endif %}
+                   </a>
+                   <div class="d-flex mx-3">
+                      <span style="color:white"><i class="fas fa-comment-dots  fa-2x"></i></span>
+                      <div>
+                      ({{review.review_comment.count}})
+                      </div>
+                  </div>
+                 </div>
+
+             </div>
+               {% comment %} 태그 {% endcomment %}
+                  {% if review.tags.exists %}
+                      <i class="fas fa-tags"></i>
+                      {% for tag in review.tags.iterator %}
+                          <a href="{{tag.get_absolute_url}}" class="badge badge-light">
+                          {{tag.name}}
+                          </a>
+                      {% endfor %}
+
+                  {% endif %}
+
+
+            <hr>
+            <div class="box" style="width:auto; height: 300px; background: black; overflow-y: scroll;">
+            <div>
+              {% for comment in comments %}
+              <div class="card mb-4">
+                <div class="card-header" style="background:#b5b5b1";>
+                    <div class="profileview2 ">
+                      {% if comment.user.posterpath %}
+                        <div class="profileview2-user-img">
+                          <img src="{{comment.user.posterpath.url}}" class="profileview2-user-img-img" alt="Avatar" >
+                        </div>
+                      {% else %}
+                        <div class="profileview2-user-img">
+                          <img src="{% static 'file/defaultprofile.png' %}" class="profileview2-user-img-img" alt="Avatar" >
+                        </div> 
+                      {% endif %}
+                      <div style="float: left;">
+                       <p style="margin-top:10px"> {{ comment.user }}</p>
+                      </div> 
+                      <div style=" text-align: right; padding-top:5px">
+
+                      </div>
+                  <div class="font-weight-light d-flex flex-column justify-content-end align-items-end" style="font-size: x-small">
+                    <p >작성:{{comment.created_at}}</p>
+                    <p>수정:{{comment.updated_at}}</p>
+                  </div>
+                    </div>
+                </div>
+
+                <div class="card-body text-dark d-flex justify-content-between alian-items-center">
+                  <div class="text-break">
+                      {{ comment.content |safe}}
+                  </div>
+                  <div>
+                    {% if user == comment.user %}
+                    <form action="{% url 'reviews:comments_delete' review.pk comment.pk %}" method="POST" style="margin:10px" class="d-inline">
+                    {% csrf_token %}
+                    <input class="btn btn-danger" type="submit" value="삭제">
+                    </form>
+                    {% endif %}
+                  </div>
+                </div>
+               
+                {% empty %}
+                  <p>작성된 댓글이 없습니다.</p>
+                {% endfor %}
+            </div>
+            
+          </div>
+            <div class="card mb-4">
+                {% if request.user.is_authenticated %}
+                <form action="{% url 'reviews:comments_create' review.pk %}" method="POST">
+                  {% csrf_token %}
+                  <div class="d-flex justify-content-start">
+                  {{ comment_form }}
+                  <input value="작성" class="btn btn-success" type="submit">
+                  </div>
+            
+                </form>
+                {% else %}
+                <a href="{% url 'accounts:login' %}" style="margin:5px; font-weight: bolder; color:black; text-decoration: none;">[댓글을 작성하려면 로그인하세요.]</a>
+                {% endif %}
+            </div>
+            
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section>
+          <div class="container" style="margin-top:100px; margin-bottom:100px;">
+            <div class="containerflip">
+                <h2 class="fw-bolder mb-4">{{ review.movie.title }}의 다른 리뷰</h2>
+                <div style="margin-left:5px">
+                    {% for review in reviewTitle %}
+                    <div class="flip-box" style="float:left; margin:2px">
+                      <div class="flip-box-inner">
+                        <div class="flip-box-front">
+                          <a href="{% url 'reviews:detail' review.pk %}" style="text-decoration-line: none; " >
+                          {% if review.picturepath %}
+                          <img class="card-img-top" style="width: 120px; height: 120px; border-radius: 3px;" src="{{review.picturepath.url}}" alt="..."> 
+                          {% else %}
+                            <img class="card-img-top" style="width: 120px; height: 120px; border-radius: 3px;" src="https://image.tmdb.org/t/p/w200{{review.movie.poster_path}}" alt="..."> 
+                          {% endif %}
+                          </a>
+                        </div>
+
+
+                        <div class="flip-box-back" >
+                           <div style="margin:20px">
+                                  {% comment %} <p class="card-text">{{ review.content|safe}}</p> {% endcomment %}
+                         
+                            <a href="{% url 'accounts:profile' review.user.username %}"  style="font-weight: bolder; color:white; text-decoration: none;">{{ review.user }}</a>
+                            
+                            <div class="mx-auto">
+                              <span style="color:red"><i class="fas fa-heart"></i>({{review.review_like.count}})
+                              <span style="color:white"><i class="far fa-comment"></i>({{review.review_comment.count}})
+                            </div>
+                            </br>
+                            <a href="{% url 'reviews:detail' review.pk %}" style="font-weight: bolder; color:white; text-decoration: none;">자세히</a>
+                         
+                           </div>
+                     
+                        </div>
+
+
+                      </div>
+                    </div>
+                    {% endfor %}
+                  </div>
+            </div>
+                     
+            </div>
+</section>
+</div>
+
+
+<script src="js/scripts.js"></script>
+
+<script>var editor = new MediumEditor('.editable');</script>
+
+{% endblock content %}

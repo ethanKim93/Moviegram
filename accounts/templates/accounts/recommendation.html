@@ -1,0 +1,278 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<style>
+* {
+  margin: 0;
+}
+
+
+
+.container {
+ 
+  min-height: calc(100vh - 50px);
+
+}
+
+.content-container {
+  margin-left: 50px;
+}
+
+
+.movie-list-container {
+  padding: 0 20px;
+}
+
+.movie-list-wrapper {
+  position: relative;
+  overflow: hidden;
+}
+
+.movie-list {
+  display: flex;
+  align-items: center;
+   height: 600px;
+  transform: translateX(0);
+  transition: all 1s ease-in-out;
+}
+
+.movie-list-item {
+  margin-right: 30px;
+  position: relative;
+}
+
+.movie-list-item:hover .movie-list-item-img {
+  transform: scale(1.2);
+  margin: 0 30px;
+  opacity: 0.5;
+}
+
+.movie-list-item:hover .movie-list-item-title,
+.movie-list-item:hover .movie-list-item-desc,
+.movie-list-item:hover .movie-list-item-button1 {
+  opacity: 1;
+  
+}
+.movie-list-item:hover .movie-list-item-button2 {
+  opacity: 1;
+  
+}
+
+.movie-list-item-img {
+  transition: all 1s ease-in-out;
+  width=300px;
+  height=600px;
+  object-fit: cover;
+  border-radius: 20px;
+}
+
+.movie-list-item-title {
+  border-radius: 3rem;
+  {% comment %} background-color: azure; {% endcomment %}
+  {% comment %} background-color:lightgray; {% endcomment %}
+  padding: 0 10px;
+  font-size: 20px;
+  {% comment %} font-weight: bold; {% endcomment %}
+  position: absolute;
+  width: 250px;
+  top: 10%;
+  left: 50px;
+  opacity: 0;
+  transition: 1s all ease-in-out;
+}
+
+.movie-list-item-desc {
+  border-radius: 3rem;
+  {% comment %} background-color: azure; {% endcomment %}
+
+  box-shadow: 5px 5px 50px 5px #D9D9D9;
+  {% comment %} background-color:lightgray; {% endcomment %}
+  overflow: hidden;
+  text-align:center;
+  align-content: center;
+  padding: 10px;
+  font-size: 14px;
+  position: absolute;
+  top: 30%;
+  left: 50px;
+  width: 250px;
+
+  opacity: 0;
+  transition: 1s all ease-in-out;
+}
+
+.movie-list-item-button1 {
+  padding: 10px;
+  {% comment %} background-color: #4dbf00; {% endcomment %}
+  {% comment %} color: white; {% endcomment %}
+  border-radius: 10px;
+  outline: none;
+  border: none;
+  cursor: pointer;
+  position: absolute;
+  bottom: 20px;
+  left: 50px;
+  opacity: 0;
+  transition: 1s all ease-in-out;
+}
+.movie-list-item-button2 {
+  padding: 10px;
+  {% comment %} background-color: #ed0c71; {% endcomment %}
+  color: white;
+  border-radius: 10px;
+  outline: none;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  bottom: 20px;
+  left: 150px;
+  opacity: 0;
+  transition: 1s all ease-in-out;
+}
+
+.arrow {
+  font-size: 120px;
+  position: absolute;
+  top: 230px;
+  right: 0;
+  color: lightgray;
+  opacity: 0.5;
+  cursor: pointer;
+}
+
+.container.active {
+  {% comment %} background-color: white; {% endcomment %}
+}
+
+.movie-list-title.active {
+  
+  
+}
+
+
+
+
+
+
+
+
+</style>
+
+
+
+
+
+
+
+<div class="bodyarea">
+
+    <div class="container">
+        <div class="content-container">
+           <div class="movie-list-container">
+                <h1 class="movie-list-title">팔로우의 추천</h1>
+                <hr>
+                <div class="movie-list-wrapper">
+
+                    <div class="movie-list">
+                    {% if recomendation_followers %}
+                      {% for recommendation_follower in recomendation_followers %}
+                       
+                        <a href="{% url 'reviews:detail' recommendation_follower.pk %}">
+                        <div class="movie-list-item">
+                            <img class="movie-list-item-img" src="https://image.tmdb.org/t/p/w300{{recommendation_follower.movie.poster_path}}" alt="">
+                            <span class="movie-list-item-title bg-dark text-white text-center" style="--bs-bg-opacity: .1;">{{recommendation_follower.movie.title|truncatechars:15}}</span>   
+                            <p class="movie-list-item-desc bg-dark text-white"style="--bs-bg-opacity: .7;">{{recommendation_follower.user.nickname}}가 추천 했습니다.</p>
+
+                        </div>
+
+                        </a>
+                        {% endfor %}
+                     {% endif %}
+                    </div>
+                    <i class="fas fa-chevron-right arrow"></i>   
+                </div>
+            </div> 
+            <div class="movie-list-container">
+                <h1 class="movie-list-title">MovieGram 추천</h1>
+                <hr>
+                <div class="movie-list-wrapper">
+                    <div class="movie-list">
+                    {% if best_movie_list  %}
+                     {% for bestmovie in best_movie_list %}
+                       <a href="{% url 'movies:detail' bestmovie.id %}">
+                        <div class="movie-list-item">
+                         
+                            <img class="movie-list-item-img" src="https://image.tmdb.org/t/p/w300{{bestmovie.poster_path}}"  alt="">
+                        
+                            <div class="content-movie">
+                            <span class="movie-list-item-title bg-dark text-white text-center" style="--bs-bg-opacity: .1;">{{bestmovie.title|truncatechars:15}}</span>
+                            <p class="movie-list-item-desc bg-dark text-white text-center" style="--bs-bg-opacity: .9;">{{bestmovie.overview |truncatechars:100}}</p>
+                   
+                          
+                            <!--
+                            <button class="movie-list-item-button1">Watch</button>
+                            <button class="movie-list-item-button2">상세보기</button>
+                            -->
+    
+                           
+                            </div>
+                        </div>
+                        </a>
+                      {% endfor %}
+                      {% endif %}  
+                    </div>
+                    <i class="fas fa-chevron-right arrow"></i>
+                </div>
+            </div>
+            <div class="movie-list-container">
+                {% if random_recommend.last_year%}
+                  <h1 class="movie-list-title">{{random_recommend.last_year}}년전 {{random_recommend.month}}월 개봉 영화</h1>
+                {% else %}
+                  <h1 class="movie-list-title">올해 {{random_recommend.month}}월 개봉 영화</h1>
+                {% endif %}
+                <hr>
+                <div class="movie-list-wrapper">
+                    <div class="movie-list">
+                    {% if best_movie_list  %}
+                     {% for bestmovie in random_recommend.movies %}
+                       <a href="{% url 'movies:detail' bestmovie.id %}">
+                        <div class="movie-list-item">
+                         
+                            <img class="movie-list-item-img" src="https://image.tmdb.org/t/p/w300{{bestmovie.poster_path}}"  alt="">
+                        
+                            <div class="content-movie">
+                            <span class="movie-list-item-title bg-dark text-white text-center" style="--bs-bg-opacity: .1;">{{bestmovie.title|truncatechars:15}}</span>
+                            <p class="movie-list-item-desc bg-dark text-white text-center" style="--bs-bg-opacity: .9;">{{bestmovie.overview |truncatechars:100}}</p>
+                   
+                          
+                            <!--
+                            <button class="movie-list-item-button1">Watch</button>
+                            <button class="movie-list-item-button2">상세보기</button>
+                            -->
+    
+                           
+                            </div>
+                        </div>
+                        </a>
+                      {% endfor %}
+                      {% endif %}  
+                    </div>
+                    <i class="fas fa-chevron-right arrow"></i>
+                </div>
+            </div>
+
+            
+            
+        
+        </div>
+    </div>
+</div>
+
+
+<script src="{% static 'js/recommendation.js' %}"></script>
+
+
+
+
+
+{% endblock content %}

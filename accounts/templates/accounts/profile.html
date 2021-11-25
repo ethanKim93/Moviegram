@@ -1,0 +1,180 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<style>
+{% comment %} .gradient-custom-2 {
+  /* fallback for old browsers */
+  background: #fbc2eb;
+
+  /* Chrome 10-25, Safari 5.1-6 */
+  background: -webkit-linear-gradient(to right, rgba(30, 10, 20, 1), rgba(20, 30, 10, 1));
+
+  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  background: linear-gradient(to right, rgba(10, 30, 40, 1), rgba(40, 30, 50, 1))
+} {% endcomment %}
+</style>
+
+
+<section class="h-100 gradient-custom-2">
+  <div class="container py-5 h-100" style="width: 100%;">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col col-lg-9 col-xl-7">
+        <div class="card bg-dark text-white">
+          <div class="rounded-top text-white d-flex flex-row" style="height:200px;">
+            <div class="ms-4 mt-5 d-flex flex-column" style="width: 150px;">
+              {% if person.posterpath %}
+                <img src={{person.posterpath.url}} alt="Generic placeholder image" class="img-fluid img-thumbnail mt-4 mb-2" style="width: 150px; z-index: 1">
+              {% else %}
+                <img src="{% static 'file/basicprofile.jpg' %}" alt="Generic placeholder image" class="img-fluid img-thumbnail mt-4 mb-2" style="width: 150px; z-index: 1">
+              {% endif %}
+                {% if user == person %}
+                <a href="{% url 'accounts:update'  %}" class="btn btn-light text-dark btn-outline-secondary" data-mdb-ripple-color="dark" style="z-index: 3;">
+                        Edit profile
+                </a>
+                {% endif %}
+            </div>
+            <div class="ms-3 d-flex justify-content-between" style="margin-top: 130px;">
+              <div>
+              {% if person.nickname %}
+                <h5>{{person.nickname}}</h5>
+              {% else %}
+                <h5>{{person.username}}</h5>
+              {% endif %}
+                <p>{{person.email}}
+              </div>
+              <div>
+               {% if user == person %}
+               <form action="{% url 'accounts:logout' %}" method="POST" class="d-inline btn btn-link">
+                  {% csrf_token %}
+                  <input type="submit" value="Logout" class="btn text-light btn-danger btn-outline-secondary" data-mdb-ripple-color="dark" style="z-index: 3;">
+                </form>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+          </div>
+        
+          <div class="p-4 text-white" style="background-color: black;">
+            <div class="d-flex justify-content-end text-center py-1">
+              <a href="{% url 'accounts:follow' person.pk %}?next={{ request.path }}">
+              {% if user != person %}
+                {% if user in person.followers.all %}
+                  <button class="btn btn-outline-dark flex-shrink-0 btn-danger text-white" type="button">
+                    <i class="bi-cart-fill me-1"></i>
+                    Unfollow
+                  </button>
+                {% else %}
+                  <button class="btn  btn-light text-dark btn-outline-secondary flex-shrink-0" type="button">
+                    <i class="bi-cart-fill me-1"></i>
+                    Follow
+                  </button>
+                {% endif %}
+              {% endif %}
+              </a>
+              <div>
+                <p class="mb-1 h5">{{person.review_user.count}}</p>
+                <p class="small text-muted mb-0">Review</p>
+              </div>
+              <div class="px-3">
+                <p class="mb-1 h5">{{person.followers.all|length}}</p>
+                <a href="{% url 'accounts:followerlist' person.pk %}">
+                  <p class="small text-muted mb-0">Followers</p>
+                </a>
+              </div>
+              <div>
+                <p class="mb-1 h5">{{person.followings.all|length}}</p>
+                <a href="{% url 'accounts:followinglist' person.pk %}">
+                  <p class="small text-muted mb-0">Following</p>
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="card-body p-4 text-light" >
+            <div class="mb-5" >
+              <p class="lead fw-normal mb-1" >About</p>
+                   <hr>
+              <div class="p-4" style="background:black">
+              {% if person.introduce %}
+                <p class="font-italic mb-1">{{person.introduce}}</p>
+              {% else %}
+              <div class="text-center">
+                <h5> 등록된 인사말이 없습니다 </h5>
+              </div>
+             {% endif %}
+              </div>
+            </div>
+            <div class="d-flex justify-content-between align-items-center my-4">
+              <p class="lead fw-normal mb-0">Recent review</p>
+              <p class="mb-0"><a href="{% url 'accounts:reviewIndex' person.pk %}" class="text-muted" style="font-weight: bolder; text-decoration: none;">Show all</a></p>
+{% comment %}  {% endcomment %}
+<!-- Scrollable modal -->
+
+
+
+{% comment %}  {% endcomment %}
+            </div>
+            <hr>
+            <div class="row g-2">
+            {% comment %} {% for review in person.review_user.all %} {% endcomment %}
+            {% if reviews %}
+              {% for review in reviews %}
+                  <div class="card mb-3 m-auto " style="max-width:200px; border-radius: 1rem; display:inline-block; background : black" >
+                    <div class="row g-0">
+                        <div class="card-body text-center">
+                        <img class="movie-list-item-img" src="https://image.tmdb.org/t/p/w300{{review.movie.poster_path}}" style="width:150px;height:150px;">
+                          <h5 class="card-title"><strong>{{ review.movie.title }}</strong></h5>
+                          <h5 class="card-title">{{ review.title }}</h5>
+                          {% comment %} <p class="card-text">{{ review.content | truncatechars:50|safe }}</p> {% endcomment %}
+                          <p class="card-text" style="color:black"><i class="fas fa-star"></i>{{ review.rank }}</p>
+                          <div class="mx-auto">
+                            <span style="color:red"><i class="fas fa-heart"></i>({{review.review_like.count}})
+                            <span style="color:blue"><i class="far fa-comment"></i>({{review.review_comment.count}})
+                          </div>
+                          <a class="card-text" href="{% url 'reviews:detail' review.pk %}" style="color: white; font-weight: bolder; text-decoration: none;">상세보기</a>
+                        </div>
+                    </div>
+                  </div>
+                {% endfor %}
+              {% else %}
+              <div class="text-center">
+                <h5>작성한 리뷰가 없습니다.</h5>
+              </div>
+              {% endif %}
+         
+            </div>
+           <div class="d-flex justify-content-between align-items-center my-4">
+              <p class="lead fw-normal mb-0">찜한 영화</p>
+              <p class="mb-0"><a href="{% url 'accounts:likemovieindex' person.pk%}" class="text-muted" style="font-weight: bolder; text-decoration: none;">Show all</a></p>
+            </div>
+                 <hr>
+            <div class="text-center m-4">
+            <div class="row g-2">
+              {% if movies %}
+             {% for movie in movies %}
+                  <div class="card m-3 text-center " style="max-width:200px;  border-radius: 1rem; display:inline-block; background:black" >
+                    <div class="row g-0">
+                        <img src="" alt="">
+                        
+                        <div class="card-body">
+                         <img class="movie-list-item-img" src="https://image.tmdb.org/t/p/w300{{movie.poster_path}}" style="width:150px;height:150px;">
+                          <h5 class="card-title">{{ movie.title }}</h5>
+                          <p class="card-text">{{ movie.content | truncatechars:50|safe }}</p>
+                          <p class="card-text">{{ movie.tmdb_rank | truncatechars:50 }}점</p>
+                          <a class="card-text" href="{% url 'movies:detail' movie.pk %}"  style="color: white; font-weight: bolder; text-decoration: none;">상세보기</a>
+                        </div>
+                    </div>
+                  </div>
+                {% endfor %}
+                {% else %}
+                    <h5>찜한 영화가 없습니다.</h5>
+              {% endif %}
+            </div>
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock content %}

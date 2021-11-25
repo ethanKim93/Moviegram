@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<style>
+    .container {
+        padding: 0;
+        margin: 0, auto;
+    }
+    .container a {
+      width: 45%;
+      max-width: 250px;
+    }
+  .container div {
+    {% comment %} width: 280px; {% endcomment %}
+    {% comment %} /height: 500px; {% endcomment %}
+    {% comment %} background-color: antiquewhite; {% endcomment %}
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 1rem;
+  }
+  {% comment %} container안에 있는 img 파일 크기 설정 {% endcomment %}
+  .container img{
+    width : 100%;
+    border-radius: 1rem;
+  }
+
+</style>
+
+
+
+  <div style="text-align:center; max-width: 500px;margin:4rem auto">
+  <form action="{% url 'reviews:search' %}" method="POST">
+    {% csrf_token %}
+    <div id="textExample1" class="form-text text-light my-5">
+        <h1>어떤 영화의 리뷰를 달고 싶으신가요?</h1>
+    </div>
+    <div class="form-outline">
+        <input
+          name="keyword"
+          type="text"
+          id="formTextExample1"
+          class="form-control"
+          aria-describedby="textExample1"
+          placeholder="영화제목"
+        />
+    </div>
+
+    <div class="d-grid gap-2 col-8 mx-auto my-5">
+      <input type="submit" value="검색" class="btn btn-light text-dark btn-outline-secondary flex-shrink-0 btn-lg my-3" type="button">
+    </div>
+  </form>
+  </div>
+  {% if results %}
+    <div class="container">
+      {% for result in results %}
+          <div class="card bg-dark text-light" style="width: 18rem;">
+              <img src="https://image.tmdb.org/t/p/w300{{result.poster_path}}" class="card-img-top" alt="...">
+              <div class="card-body">
+                <h5 class="card-title">{{result.title}}</h5>
+              </div>
+              <div class="card-body">
+                <form type="button" action="{% url 'reviews:create' %}" method="GET">
+                  <input type="hidden" name='movie_id' value={{result.id}}>
+                  <input value='리뷰작성'  type="submit" class="btn btn-light text-dark btn-outline-secondary flex-shrink-0">
+                </form>
+              </div>
+          </div>
+      {% endfor %}
+      <script src="{% static 'js/magicgrid.js' %}"></script>
+    <div></div>
+  {% endif %}
+
+{% endblock content %}

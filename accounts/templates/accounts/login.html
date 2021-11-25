@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load socialaccount %}
+{% load bootstrap5 %}
+{% load static %}
+
+{% block content %}
+  <div class="d-flex justify-content-center jb-box">
+      <video muted autoplay loop>
+        <source src="{% static 'file/Yellow Flower Falling Petals [1080P].mp4' %}" type="video/mp4">
+      </video> 
+      <div class="jb-text">
+      <div class="back text-center">
+        <div style=" max-width: 500px;margin:auto auto;"> 
+          <h1 class="text-white">LOGIN</h1>
+              <form action="" method="POST" class="text-white d-inline">
+              {% csrf_token %}
+              {% bootstrap_form form %}
+              <div class="d-flex flex-row justify-content-center" >
+                <input type="submit" class="btn btn-success btn-outline-white flex-shrink-0" type="button" value="로그인">
+                <div>
+                  <a href="{% url 'accounts:signup' %}" class="btn btn-primary btn-outline-white flex-shrink-0">회원가입</a>
+                </div>
+              </div>
+              </form>
+          <br>
+          <div class='g-sign-in-button'>
+          <div class=content-wrapper>
+           <a href="{% provider_login_url 'google' next="/movies/" %}" >
+          <span class='text-container' style="background-color:white; padding:12px;  border-radius: 4px;">
+            <span style="color:black"><img src='https://developers.google.com/identity/images/g-logo.png' style="width:20px; height:20px;"> Sign in with Google</span>
+          </span>
+          </a>
+          </div>
+          </div>
+         
+        </div>
+      </div>
+</div>
+{% endblock content %}
+
+<script src="background/scripts.js"></script>
+<script language=javascript>
+const div = document.querySelector('h1')
+for (let i = 0; i < 100; i++) {
+  const p = document.createElement('p')
+  p.textContent = i
+  div.appendChild(p)
+}
+window.onbeforeunload = () => {
+  window.scrollTo(0, 0);
+}
+
+</script>
+
+
+
+

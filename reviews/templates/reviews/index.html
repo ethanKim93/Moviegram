@@ -1,0 +1,200 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+  .container {
+        padding: 0;
+        margin: 0, auto;
+  }
+  .container a {
+      width: 100%;
+      max-width: 250px;
+  }
+  .container div {
+    justify-content: center;
+    align-items: center;
+    border-radius: 1rem;
+  }
+  .card {
+      position: relative;
+      transition: transform 1s;
+      transform-style: preserve-3d;
+      cursor: pointer;
+  }
+
+  .flip-box {
+    padding: auto;
+    background-color: transparent;
+    width: 300px;
+    height: 300px;
+    border: 1px solid dark;
+    perspective: 1000px; /* Remove this if you don't want the 3D effect */
+  }
+
+  /* This container is needed to position the front and back side */
+  .flip-box-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    transition: transform 0.5s;
+    transform-style: preserve-3d;
+  }
+
+  /* Do an horizontal flip when you move the mouse over the flip box container */
+  .flip-box:hover .flip-box-inner {
+    transform: rotateY(180deg);
+  }
+
+  /* Position the front and back side */
+  .flip-box-front, .flip-box-back {
+    position: absolute;
+    width: 300px; 
+    height: 300px;
+    -webkit-backface-visibility: hidden; /* Safari */
+    backface-visibility: hidden;
+    
+  }
+
+  /* Style the front side */
+  .flip-box-front {
+    background-color: #FFF;
+    color: black;
+        
+  }
+
+  /* Style the back side */
+  .flip-box-back {
+  
+    color: black;
+    transform: rotateY(180deg);
+    
+  }
+
+</style>
+  {% if keyword %}
+  <h1 style="text-align:center; max-width:500px;margin:4rem auto; text-shadow: 2px 2px gray;font-family: 'Dancing Script', cursive;">{{keyword}} 검색 결과</h1>
+  {% else %}
+  <h1 style="text-align:center; max-width:500px;margin:4rem auto; text-shadow: 2px 2px gray;font-family: 'Dancing Script', cursive;">TimeLine</h1>
+  {% endif %}
+
+  {% if request.user.is_authenticated %}
+  {% else %}
+  {% endif %}
+  <hr>
+  <div class="container">
+  
+  {% for review in reviews %}
+  <div class="flip-box bg-dark">
+      <div class="flip-box-inner bg-dark">
+       <div class="flip-box-front bg-dark">
+        <a href="{% url 'reviews:detail' review.pk %}" style="text-decoration-line: none;" >
+        {% if review.picturepath %}
+          <img src="{{review.picturepath.url}}" class="card-img-top" style="width: 300px; height: 300px; border-radius: 1rem;" alt="...">
+        {% else %}
+          <img src="https://image.tmdb.org/t/p/w500{{review.movie.poster_path}}" class="card-img-top" style="width: 300px; height: 300px; border-radius: 1rem;" alt="...">
+        {% endif %}
+        </a>
+        </div>
+
+        <div class="flip-box-back text-light" style="margin-top: 20%;">
+        <a href="{% url 'movies:detail' review.movie.pk %}" style="font-weight: bolder; text-decoration: none;">
+          <div>
+            <strong class="card-title text-white">{{review.movie.title}}</strong>
+          </div>
+        </a>
+        <hr>
+            <p>{{ review.title }}</p>
+        <div>
+          <a class="text-light" style="font-weight: bolder; text-decoration: none;" href="{% url 'accounts:profile' review.user.username %}">작성자 :{{ review.user.nickname }}</a>
+        </div>
+        <div class="m-3 d-flex">
+          <p class="card-text text-light m-2"><i class="fas fa-star"></i>{{ review.rank }}</p>
+          <span class="text-danger m-2"><i class="fas fa-heart"></i>({{review.review_like.count}})
+          <span class="text-primary m-2"><i class="far fa-comment"></i>({{review.review_comment.count}})
+
+        </div>
+        <a class="text-light"  href="{% url 'reviews:detail' review.pk %}" style="text-decoration: none;" >
+        <hr>
+        <div>
+        상세보기
+        </div>
+        </a>
+        </div>
+      </div>
+   
+ 
+   </div>
+   
+  {% endfor %}
+ 
+</div>
+  {% include 'snippets/pagination.html' with page_obj=reviews %}
+
+
+
+      {% comment %} 자바스크립트 경로 설정 {% endcomment %}
+  <script src="{% static 'js/magicgrid.js' %}"></script>
+ 
+{% endblock content %}
+
+
+{% block script %}
+{% comment %} <script>
+  let pageNum = 2
+
+  document.addEventListener('scroll', (event) => {
+    console.log(event)
+    const {scrollHeight, scrollTop, clientHeight} = document.documentElement
+    // console.log(scrollHeight, scrollTop, clientHeight)
+    if (scrollHeight - Math.round(scrollTop) === clientHeight) {
+      axios({
+        method: 'get',
+        url: `/reviews/?page=${pageNum}`,
+        headers: {'x-requested-with': 'XMLHttpRequest'}
+      })
+        .then((res) => {
+          const reviews = res.data
+          
+          reviews.forEach((review) => {
+            const reviewList = document.querySelector('.review-list')
+            const reviewDiv = document.createElement('div')
+
+            const reviewHTML = `
+<div class="flip-box bg-dark">
+      <div class="flip-box-inner bg-dark">
+       <div class="flip-box-front bg-dark">
+        <a href="${review.pk}/" style="text-decoration-line: none;" >
+        {% if review.picturepath %}
+          <img src="${review.fields.picturepath.url}" class="card-img-top" style="width: 300px; height: 300px; border-radius: 1rem;" alt="...">
+        {% else %}
+          <img src="https://image.tmdb.org/t/p/w500${review.fields.movie.poster_path}" class="card-img-top" style="width: 300px; height: 300px; border-radius: 1rem;" alt="...">
+        {% endif %}
+        </a>
+        </div>
+
+        <div class="flip-box-back" style="margin-top: 70px;">
+        <strong class="card-title text-white">${review.fields.movie.title}</strong>
+     <p class="card-text">${ review.fields.content|safe}</p> 
+        <p class="card-text text-white"><i class="fas fa-star"></i>${ review.fields.rank }</p>
+        <a href="accounts/${review.fields.user.username}">작성자 :${ review.fields.user }</a>
+        
+        <div class="mx-auto">
+        </div>
+        <br>
+        <a href="${review.pk}" style="text-decoration: none;" >상세보기</a>
+        </div>
+      </div>
+   </div>
+            `
+            reviewDiv.innerHTML = reviewHTML
+            reviewList.appendChild(reviewDiv)
+          })
+          pageNum += 1
+        })
+    }
+  })
+
+</script> {% endcomment %}
+{% endblock %}

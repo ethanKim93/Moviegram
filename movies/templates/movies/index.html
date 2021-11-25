@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    .container {
+        padding: 0;
+        margin: 0, auto;
+    }
+    .container a {
+      width: 100%;
+      max-width: 250px;
+    }
+  .container div {
+    justify-content: center;
+    align-items: center;
+    border-radius: 1rem;
+    background-color: azure;
+  }
+
+</style>
+
+
+
+  <h1 style="text-align:center; max-width: 500px;margin:4rem auto">Movies</h1>
+  <hr>
+  <div class="container" >
+  {% for movie in movies %}
+    <div class="card mb-3 " style="max-width: 45%; border-radius: 1rem; display:inline-block;" >
+      <div class="row g-0">
+        <div class="col-md-4">
+          <img src="https://image.tmdb.org/t/p/w300{{movie.poster_path}}" class="img-fluid rounded-start" alt="...">
+        </div>
+        <div class="col-md-6">
+          <div class="card-body">
+            <h5 class="card-title">{{ movie.title }}</h5>
+            <p class="card-text">{{ movie.overview | truncatechars:50 }}</p>
+            <a class="card-text" href="{% url 'movies:detail' movie.pk %}">[DETAIL]</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+      {% comment %} 자바스크립트 경로 설정 {% endcomment %}
+  <script src="{% static 'js/magicgrid.js' %}"></script>
+{% endblock content %}

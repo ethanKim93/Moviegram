@@ -1,0 +1,73 @@
+<div class="MovieGram_header sticky-top">
+
+  <div class="container-fluid">
+     
+      <div>
+          <h1 class="moviegram_logo" style="font-family: 'Lobster', cursive; font-size:60px">MovieGram</h1>
+      </div>
+     
+      <div class="d-flex justify-content-center m-4">
+        <div>
+        <div class="d-flex justify-content-around align-self-center">
+        <div class="movigram_header_navbar d-flex align-items-center" style="font-family: 'Bebas Neue', cursive; font-weight: bolder;>
+">
+            <a href="{% url 'reviews:index' %}" class="prgmatic_header_nav mx-3"  style="text-decoration: none; color:white;">
+                    <span>TIMELINE</span>  
+            </a>&nbsp;&nbsp; |
+            {% comment %} <a href="{% url 'movies:index' %}" class="prgmatic_header_nav">
+                    <span>Movies</span>
+            </a> {% endcomment %}
+              &nbsp;
+            <a href="{% url 'reviews:search' %}" class="prgmatic_header_nav  mx-3"  style="text-decoration: none; color:white;">
+                    <span>REVIEW CREATE</span>  
+            </a>&nbsp;&nbsp; |
+            {% if not user.is_authenticated %}
+              &nbsp;
+                <a href="{% url 'accounts:login' %}?next={{requset.path}}" class="prgmatic_header_nav mx-3"  style="text-decoration: none; color:white;">
+                    <span>LOGIN</span> 
+                </a>&nbsp;&nbsp; |
+                  &nbsp;
+                <a href="{% url 'accounts:signup' %}" class="prgmatic_header_nav mx-3" style="font-weight: bolder; color:white; text-decoration: none;">
+                    <span>SINGUP</span> 
+                </a>&nbsp;&nbsp; |
+            {% else %}
+          
+              &nbsp;
+                <a href="{% url 'accounts:recommendation' username=user.username %}" class="prgmatic_header_nav mx-3"  style="text-decoration: none; color:white;">
+                    <span>RECOMMENDATION</span>
+                </a> &nbsp;&nbsp; |
+        
+                  &nbsp;
+                <a href="{% url 'accounts:profile' username=user.username %}" class="prgmatic_header_nav mx-3" style="text-decoration: none; color:white;">
+                    <span>PROFILE</span>
+                </a>
+                 &nbsp;&nbsp; |
+              &nbsp;    
+              <form action="{% url 'accounts:logout' %}" method="POST">
+                 {% csrf_token %}
+                <input type="submit" value="LOGOUT" class="btn-link prgmatic_header_nav mx-3" style="font-weight: bolder; color:white; text-decoration: none;">
+              </form>
+              &nbsp;&nbsp; |
+            {% endif %}
+        </div>
+        &nbsp;
+        <div class="mx-3">
+            <form action="{% url 'reviews:reviewsearch' %}" method="POST">
+                    {% csrf_token %}
+                    <div class="form-outline d-flex align-items-center">
+                        <input
+                        name="reviewkeyword"
+                        type="text"
+                        id="formTextExample1"
+                        class="form-control"
+                        aria-describedby="textExample1"
+                        placeholder="리뷰제목/내용/태그검색">
+                    <input type="submit" value="검색" class="btn btn-dark text-light btn-outline-secondary flex-shrink-0 my-3" type="button">
+                </div>
+            </form>
+        </div>
+      </div>
+    </div>
+        </div>
+</div>
+</div>

@@ -1,0 +1,265 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load social_share %}
+{% block content %}
+<style>
+.carousel-inner > .item > img,
+.carousel-inner > .item > a > img {
+width: 70%;
+margin: auto;
+}
+</style>
+    <section class="py-5">
+        <div class="container px-4 px-lg-5 my-5">
+            <div class="row gx-4 gx-lg-5 align-items-center">
+                <div class="col-md-6">
+                
+                    {% comment %} 포스터 슬라이드 {% endcomment %}
+                  <div id="myCarousel" class="carousel slide" data-ride="carousel">
+                    <!-- Indicators -->
+                    <ol class="carousel-indicators">
+                      <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+                      <li data-target="#myCarousel" data-slide-to="1"></li>
+                      <li data-target="#myCarousel" data-slide-to="2"></li>
+                      <li data-target="#myCarousel" data-slide-to="3"></li>
+                    </ol>
+
+                    <!-- Wrapper for slides -->
+                    <div class="carousel-inner" role="listbox">
+                      <div class="item active">
+                        <img src="{{poster_path}}" alt="Chania">
+                        <div class="carousel-caption">
+                        </div>
+                      </div>
+                      {% for movie_img in movie_imgs %}
+                      <div class="item">
+                        <img src="https://image.tmdb.org/t/p/w500/{{movie_img.file_path}}" alt="Chania">
+                        <div class="carousel-caption">
+                        </div>
+                      </div>
+                    {% endfor %}
+                    </div>
+                    <!-- Left and right controls -->
+                    <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
+                      <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                      <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+                      <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                      <span class="sr-only">Next</span>
+                    </a>
+                  </div>                    
+                
+                
+                </div>
+                <div class="col-md-6">
+                    <div class="small mb-1">{{ movie.tagline }}</div>
+                    <h1 class="display-5 fw-bolder">{{ movie.title }}</h1>
+                    <div class="fs-5 mb-5">
+                      <div class="my-3">
+                        <span>TMDB 온라인 평점:{{movie.tmdb_rank}}</span>
+                        <span class="mx-5">MovieGram 유저 평점: {{movie_rank}}</span>
+                      </div>
+                      <div class="my-3 d-flex">
+                        <span>개봉일: {{movie.release_date}}</span>
+                        <span class="mx-5">런타임: {{movie.runtime}}</span>
+                        <div class="d-flex">
+                          <p>장르 :&nbsp</p>
+                            {% for genre in movie_genre %}
+                              <p>{{genre.genre_name}}</p>&nbsp
+                            {% endfor %}
+                        </div>
+                      </div>
+                    </div>
+                    <p class="lead"> {{ movie.overview }}</p>
+                    <div class="d-flex justify-content-between align-items-sm-center">
+                    <div class="d-flex my-3">
+                        {% comment %} <input class="form-control text-center me-3" id="inputQuantity" type="num" value="1" style="max-width: 3rem" /> {% endcomment %}
+                        
+                        <a href="{% url 'movies:likes' movie.pk %}?next={{ request.path }}">
+                          {% if user in movie.movie_like.all %}
+                            <button class="btn btn-danger text-white btn-outline-secondary flex-shrink-0" type="button">
+                              <i class="bi-cart-fill me-1"></i>
+                              찜하기 취소
+                            </button>
+                          {% else %}
+                            <button class="btn btn-light text-dark btn-outline-secondary flex-shrink-0" type="button">
+                              <i class="bi-cart-fill me-1"></i>
+                              찜하기
+                            </button>
+                          {% endif %}
+                        </a>
+                        <form action="{% url 'reviews:create' %}" method="GET" class="mx-3">
+                          <input type="hidden" name='movie_id' value={{movie.tmdb_id}}>
+                          <input value='리뷰작성'  type="submit" class="btn btn-light text-dark btn-outline-secondary flex-shrink-0">
+                        </form>
+                        
+
+                    </div>
+                    <div class="btn-group btn-outline-primary" role="group" aria-label="Basic example">
+                          <button type="button" class="btn btn-light btn-outline-primary">{% post_to_facebook post.get_absolute_url "Facebook" %}</button>
+                          <button type="button" class="btn btn-light btn-outline-primary">{% post_to_twitter "Moview {{review.title}}. Review" post.get_absolute_url "Twitter" %}</button>
+                          <button type="button" class="btn btn-light btn-outline-primary">{% send_email object.title "Moview {{review.title}}. Review"  post.get_absolute_url  "email" %}</button>
+                    </div>
+                    </div>  
+                </div>
+            </div>
+        </div>
+    </section>
+ {% comment %} 동영상 {% endcomment %}
+
+
+<!-- Grid row -->
+<section class="py-5 bg-dark">
+    <div class="container px-4 px-lg-5 mt-5">
+        <h2 class="fw-bolder mb-4">관련 영상({{movie_videos.count}})</h2>
+        <hr>
+      <div class="row justify-content-center ">
+      {% if movie_videos %}
+      {% for video in movie_videos %}
+        <!-- Grid column -->
+        <div class="col col-4 mb-4">
+
+          <!--Modal: Name-->
+          <div class="modal fade" id="{{video.pk}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+
+              <!--Content-->
+              <div class="modal-content ">
+
+                <!--Body-->
+                <div class="modal-body mb-0 p-0 ">
+
+                  <div class="embed-responsive embed-responsive-16by9 z-depth-1-half">
+                    <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/{{video.youtube_key}}"
+                      allowfullscreen></iframe>
+                  </div>
+
+                </div>
+
+                <!--Footer-->
+                <div class="modal-footer justify-content-center">
+                  <span class="mr-4">{{movie.title}}</span>
+                  <a type="button" class="btn-floating btn-sm btn-fb"><i class="fab fa-facebook-f"></i></a>
+                  <!--Twitter-->
+                  <a type="button" class="btn-floating btn-sm btn-tw"><i class="fab fa-twitter"></i></a>
+                  <!--Google +-->
+                  <a type="button" class="btn-floating btn-sm btn-gplus"><i class="fab fa-google-plus-g"></i></a>
+                  <!--Linkedin-->
+                  <a type="button" class="btn-floating btn-sm btn-ins"><i class="fab fa-linkedin-in"></i></a>
+
+                  <button type="button" class="btn btn-outline-primary btn-rounded btn-md ml-4" data-dismiss="modal">Close</button>
+
+                </div>
+
+              </div>
+              <!--/.Content-->
+
+            </div>
+          </div>
+          <!--Modal: Name-->
+          
+          <a><img class="img-fluid z-depth-1" src="http://img.youtube.com/vi/{{video.youtube_key}}/0.jpg" alt="video"
+              data-toggle="modal" data-target="#{{video.pk}}"></a>
+
+        </div>
+        <!-- Grid column -->
+      {% endfor %}
+      {% else %}
+                <h4 class="text-center">제공된 동영상이 없습니다.</h4>
+      {% endif %}
+
+      </div>
+<!-- Grid row -->
+  </div>
+</section>
+
+        <!-- Related items section-->
+        <section class="py-5 bg-dark">
+            <div class="container px-4 px-lg-5 mt-5">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <h2 class="fw-bolder mb-4">리뷰({{reviews_all.count}})</h2>
+                </div>
+                <div>
+                <a href="{% url 'movies:movie_reviews' movie.pk %}">Show all</a>
+                </div>
+            </div>
+                <hr>
+                {% if reviews %}
+                  {% for review in reviews %}
+                  <div class="card mb-3 text-center" style="max-width: 45%; border-radius: 1rem; display:inline-block;background:black;" >
+                    <div class="row g-0">
+                        <div class="card-body m-5">
+                          <h5 class="card-title">{{ review.title }}</h5>
+                          <p class="card-text">{{ review.rank | truncatechars:50 }}점</p>
+                          <a class="card-text" href="{% url 'reviews:detail' review.pk %}">[DETAIL]</a>
+                        </div>
+                     
+                    </div>
+                  </div>
+                  {% endfor %}
+                  {% else %}
+                    <h4 class="text-center">작성된 리뷰가 없습니다. 첫번째 리뷰를 남겨주세요!</h4>
+                  {% endif %}
+            </div>
+
+      </section>
+        <section class="py-5 bg-dark similar_movie ">
+            <div class="container px-4 px-lg-5 mt-5">
+                <h2 class="fw-bolder mb-4">비슷한 영화</h2>
+                <hr>
+                  {% for similar_movie in similar_movie_list %}
+                  <div class="card mb-5 text-center" style="max-width: 19%; border-radius: 1rem; display:inline-block; background:black" >
+                    <div class="row g-0">
+                        <div class="card-body text-light">
+                          <img src="https://image.tmdb.org/t/p/w500/{{similar_movie.poster_path}}" alt="Chania">
+                        </div>
+                        <div class="card-body">
+                          <h5 class="card-title">{{ similar_movie.title }}</h5>
+                          <p class="card-text">{{ similar_movie.rank }}</p>
+                        </div>
+                        <div class="card-body">
+                        <a class="card-text" href="{% url 'movies:detail' similar_movie.pk %}">[DETAIL]</a>
+                        </div>
+
+                    </div>
+                  </div>
+                {% endfor %}
+            </div>
+      </section>
+        <script src="js/scripts.js"></script>
+
+
+<style class='javescript'>
+$('#modal1').on('hidden.bs.modal', function (e) {
+  // do something...
+  $('#modal1 iframe').attr("src", $("#modal1 iframe").attr("src"));
+});
+
+$('#modal6').on('hidden.bs.modal', function (e) {
+  // do something...
+  $('#modal6 iframe').attr("src", $("#modal6 iframe").attr("src"));
+});
+
+$('#modal4').on('hidden.bs.modal', function (e) {
+  // do something...
+  $('#modal4 iframe').attr("src", $("#modal4 iframe").attr("src"));
+});
+
+    .container {
+        padding: 0;
+        margin: 0, auto;
+    }
+
+    .similar_movie img {
+      width: 7rem;
+      height: 7rem;
+      border-radius: 1rem;
+    }
+
+</style>
+
+
+{% endblock content %}
+

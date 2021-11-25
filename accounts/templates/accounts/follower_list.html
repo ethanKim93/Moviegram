@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+  .container {
+        padding: 0;
+        margin: 0, auto;
+  }
+  .container a {
+      width: 100%;
+      max-width: 250px;
+  }
+  .container div {
+    justify-content: center;
+    align-items: center;
+    border-radius: 1rem;
+  }
+  .card {
+      position: relative;
+      transition: transform 1s;
+      transform-style: preserve-3d;
+      cursor: pointer;
+  }
+
+  .flip-box {
+    padding: auto;
+    background-color: transparent;
+    width: 300px;
+    height: 300px;
+    border: 1px solid dark;
+    perspective: 1000px; /* Remove this if you don't want the 3D effect */
+  }
+
+  /* This container is needed to position the front and back side */
+  .flip-box-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    transition: transform 0.5s;
+    transform-style: preserve-3d;
+  }
+
+  /* Do an horizontal flip when you move the mouse over the flip box container */
+  .flip-box:hover .flip-box-inner {
+    transform: rotateY(180deg);
+  }
+
+  /* Position the front and back side */
+  .flip-box-front, .flip-box-back {
+    position: absolute;
+    width: 300px; 
+    height: 300px;
+    -webkit-backface-visibility: hidden; /* Safari */
+    backface-visibility: hidden;
+    
+  }
+
+  /* Style the front side */
+  .flip-box-front {
+    background-color: #FFF;
+    color: black;
+        
+  }
+
+  /* Style the back side */
+  .flip-box-back {
+  
+    color: black;
+    transform: rotateY(180deg);
+    
+  }
+
+</style>
+  <h1 style="text-align:center; max-width:500px;margin:4rem auto; text-shadow: 2px 2px gray;font-family: 'Dancing Script', cursive;">{{person.nickname}}님의 팔로워</h1>
+  <hr>
+  <div class="container">
+    {% for follow in followers %}
+    <div class="card bg-dark">
+    <a href="{% url 'accounts:profile' follow.username%}" class="text-center">
+              {% if follow.posterpath %}
+                <img src={{follow.posterpath.url}} alt="Generic placeholder image" class="img-fluid img-thumbnail mt-4 mb-2" style="width: 150px; z-index: 1">
+              {% else %}
+                <img src="{% static 'file/basicprofile.jpg' %}" alt="Generic placeholder image" class="img-fluid img-thumbnail mt-4 mb-2" style="width: 150px; z-index: 1">
+              {% endif %}
+              {% if  follow.nickname %}
+              <div class="text-light">{{follow.nickname}}</div>
+            {% else %}
+              <div class="text-light">{{follow.username}}</div>
+              {% endif %}
+    </a>
+    </div>
+    {% endfor %}
+
+</div>
+
+
+
+      {% comment %} 자바스크립트 경로 설정 {% endcomment %}
+  <script src="{% static 'js/magicgrid.js' %}"></script>
+ 
+{% endblock content %}
+
+
+{% block script %}
+{% endblock %}
